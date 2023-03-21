@@ -41,23 +41,23 @@ jobs:
           make core-android-x86_64
       - name: Package Directories
         run: |
-          mv /home/runner/work/frida/build/frida-android-arm/bin/frida-server modfad
-          7z a android_modfad_arm.7z modfad
-          rm modfad
-          mv /home/runner/work/frida/build/frida-android-arm64/bin/frida-server modfad
-          7z a android_modfad_arm64.7z modfad
-          rm modfad
-          mv /home/runner/work/frida/build/frida-android-x86/bin/frida-server modfad
-          7z a android_modfad_x86.7z modfad
-          rm modfad
-          mv /home/runner/work/frida/build/frida-android-x86_64/bin/frida-server modfad
-          7z a android_modfad_x86_64.7z modfad
-      - name: Update modfad Release
+          mv /home/runner/work/frida/build/frida-android-arm/bin/frida-server modfda
+          7z a android_modfda_arm.7z modfda
+          rm modfda
+          mv /home/runner/work/frida/build/frida-android-arm64/bin/frida-server modfda
+          7z a android_modfda_arm64.7z modfda
+          rm modfda
+          mv /home/runner/work/frida/build/frida-android-x86/bin/frida-server modfda
+          7z a android_modfda_x86.7z modfda
+          rm modfda
+          mv /home/runner/work/frida/build/frida-android-x86_64/bin/frida-server modfda
+          7z a android_modfda_x86_64.7z modfda
+      - name: Update modfda Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: Build
           files: |
-            android_modfad_arm.7z
-            android_modfad_arm64.7z
-            android_modfad_x86.7z
-            android_modfad_x86_64.7z
+            android_modfda_arm.7z
+            android_modfda_arm64.7z
+            android_modfda_x86.7z
+            android_modfda_x86_64.7z
