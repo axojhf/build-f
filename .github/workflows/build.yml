@@ -1,0 +1,63 @@
+name: CI
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+env:
+  ANDROID_NDK_VERSION: r25b
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up NDK
+        id: setup-ndk
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: ${{ env.ANDROID_NDK_VERSION }}
+          add-to-path: false
+      - name: Add ANDROID_NDK_ROOT to environment
+        run: echo "ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}" >> $GITHUB_ENV
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: install dependencies
+        run: |
+          sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install build-essential tree ninja-build gcc-multilib g++-multilib lib32stdc++-9-dev flex bison xz-utils ruby ruby-dev python3-requests python3-setuptools python3-dev python3-pip libc6-dev libc6-dev-i386 p7zip-full p7zip-rar -y
+          sudo gem install fpm -v 1.11.0 --no-document
+          python3 -m pip install lief
+      - name: Init
+        run: |
+          git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b 16.0.11
+          cd frida/
+          rm -rf ./frida-core
+          git clone --depth=1 https://github.com/axojhf/frida-core.git -b patched
+          cd ..
+          make core-android-arm
+          make core-android-arm64
+          make core-android-x86
+          make core-android-x86_64
+      - name: Package Directories
+        run: |
+          7z a modfd_arm.7z ${{ github.workspace }}/frida/build/frida-android-arm/bin/frida-server
+          7z a modfd_arm64.7z ${{ github.workspace }}/frida/build/frida-android-arm64/bin/frida-server
+          7z a modfd_x86.7z ${{ github.workspace }}/frida/build/frida-android-x86/bin/frida-server
+          7z a modfd_x86_64.7z ${{ github.workspace }}/frida/build/frida-android-x86_64/bin/frida-server
+      - uses: actions/upload-artifact@v3
+        with:
+          name: modfd_arm
+          path: modfd_arm.7z
+      - uses: actions/upload-artifact@v3
+        with:
+          name: modfd_arm64
+          path: modfd_arm64.7z
+      - uses: actions/upload-artifact@v3
+        with:
+          name: modfd_x86
+          path: modfd_x86.7z
+      - uses: actions/upload-artifact@v3
+        with:
+          name: modfd_x86_64
+          path: modfd_x86_64.7z
