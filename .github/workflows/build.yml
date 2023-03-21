@@ -35,12 +35,17 @@ jobs:
           rm -rf ./frida-core
           git clone --depth=1 https://github.com/axojhf/frida-core.git -b patched
           cd ..
-          sh releng/setup-env.sh
+          ls
+          sh ./releng/setup-env.sh
+          make build/frida-android-arm/lib/pkgconfig/frida-core-1.0.pc
+          make build/frida-android-arm64/lib/pkgconfig/frida-core-1.0.pc
+          make build/frida-android-x86/lib/pkgconfig/frida-core-1.0.pc
+          make build/frida-android-x86_64/lib/pkgconfig/frida-core-1.0.pc
           # make core-android-arm
           # make core-android-arm64
           # make core-android-x86
           # make core-android-x86_64
-          make build/frida-android-${{ matrix.arch }}/lib/pkgconfig/frida-core-1.0.pc
+          # make build/frida-android-${{ matrix.arch }}/lib/pkgconfig/frida-core-1.0.pc
       - name: Package Directories
         run: |
           7z a modfd_arm.7z ${{ github.workspace }}/frida/build/frida-android-arm/bin/frida-server
