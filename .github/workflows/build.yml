@@ -6,7 +6,7 @@ on:
     branches: [ "main" ]
 env:
   ANDROID_NDK_VERSION: r25b
-  FRIDA_RELEASED_VERSION: 16.0.11
+  FRIDA_RELEASED_VERSION: '16.0.11'
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
       - name: Init
         run: |
           cd /home
-          git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b ${{FRIDA_RELEASED_VERSION}}
+          git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b ${{ FRIDA_RELEASED_VERSION }}
           cd frida/
           rm -rf ./frida-core
           git clone --depth=1 https://github.com/axojhf/frida-core.git -b patched
