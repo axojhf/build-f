@@ -6,6 +6,7 @@ on:
     branches: [ "main" ]
 env:
   ANDROID_NDK_VERSION: r25b
+  FRIDA_RELEASED_VERSION: 16.0.11
 
 jobs:
   build:
@@ -26,43 +27,38 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install build-essential tree ninja-build gcc-multilib g++-multilib lib32stdc++-9-dev flex bison xz-utils ruby ruby-dev python3-requests python3-setuptools python3-dev python3-pip libc6-dev libc6-dev-i386 p7zip-full p7zip-rar -y
-          sudo gem install fpm -v 1.11.0 --no-document
+          sudo gem install fpm
           python3 -m pip install lief
       - name: Init
         run: |
-          git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b 16.0.11
+          cd /home
+          git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b ${{FRIDA_RELEASED_VERSION}}
           cd frida/
           rm -rf ./frida-core
           git clone --depth=1 https://github.com/axojhf/frida-core.git -b patched
-          # sh ./releng/setup-env.sh
-          # make build/frida-android-arm/lib/pkgconfig/frida-core-1.0.pc
-          # make build/frida-android-arm64/lib/pkgconfig/frida-core-1.0.pc
-          # make build/frida-android-x86/lib/pkgconfig/frida-core-1.0.pc
-          # make build/frida-android-x86_64/lib/pkgconfig/frida-core-1.0.pc
           make core-android-arm
           make core-android-arm64
           make core-android-x86
           make core-android-x86_64
-          # make build/frida-android-${{ matrix.arch }}/lib/pkgconfig/frida-core-1.0.pc
       - name: Package Directories
         run: |
-          7z a modfd_arm.7z ${{ github.workspace }}/frida/build/frida-android-arm/bin/frida-server
-          7z a modfd_arm64.7z ${{ github.workspace }}/frida/build/frida-android-arm64/bin/frida-server
-          7z a modfd_x86.7z ${{ github.workspace }}/frida/build/frida-android-x86/bin/frida-server
-          7z a modfd_x86_64.7z ${{ github.workspace }}/frida/build/frida-android-x86_64/bin/frida-server
-      - uses: actions/upload-artifact@v3
+          mv /home/frida/build/frida-android-arm/bin/frida-server modfad
+          7z a android_modfad_arm.7z modfad
+          rm modfad
+          mv /home/frida/build/frida-android-arm64/bin/frida-server modfad
+          7z a android_modfad_arm64.7z modfad
+          rm modfad
+          mv /home/frida/build/frida-android-x86/bin/frida-server modfad
+          7z a android_modfad_x86.7z modfad
+          rm modfad
+          mv /home/frida/build/frida-android-x86_64/bin/frida-server modfad
+          7z a android_modfad_x86_64.7z modfad
+      - name: Update modfad Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: modfd_arm
-          path: modfd_arm.7z
-      - uses: actions/upload-artifact@v3
-        with:
-          name: modfd_arm64
-          path: modfd_arm64.7z
-      - uses: actions/upload-artifact@v3
-        with:
-          name: modfd_x86
-          path: modfd_x86.7z
-      - uses: actions/upload-artifact@v3
-        with:
-          name: modfd_x86_64
-          path: modfd_x86_64.7z
+          tag_name: Build
+          files: |
+            android_modfad_arm.7z
+            android_modfad_arm64.7z
+            android_modfad_x86.7z
+            android_modfad_x86_64.7z
