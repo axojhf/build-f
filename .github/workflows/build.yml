@@ -55,7 +55,7 @@ jobs:
       - name: Update modfda Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: Build
+          tag_name: build
           files: |
             android_modfda_arm.7z
             android_modfda_arm64.7z
