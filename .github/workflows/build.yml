@@ -14,7 +14,7 @@ jobs:
           go-version: 'stable'
       - name: Build
         run: |
-          sudo apt update && apt install -y p7zip-full
+          sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install p7zip-full -y
           go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
           cd /home/runner/work/
           git clone --depth=1 --recurse-submodules https://github.com/klzgrad/forwardproxy
