@@ -56,6 +56,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: build
+          body: 'Frida 16.0.19'
           files: |
             android_modfda_arm.7z
             android_modfda_arm64.7z
