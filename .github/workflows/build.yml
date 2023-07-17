@@ -55,7 +55,7 @@ jobs:
       - name: Update modfda Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: build
+          tag_name: 16.1.3
           body: 'Frida 16.1.3'
           files: |
             android_modfda_arm.7z
