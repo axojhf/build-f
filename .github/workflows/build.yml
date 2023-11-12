@@ -31,7 +31,7 @@ jobs:
       - name: Init
         run: |
           cd /home/runner/work/
-          git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b 16.1.4
+          git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b 16.1.5
           cd frida/
           rm -rf ./frida-core
           git clone --depth=1 https://github.com/axojhf/frida-core.git -b patched
@@ -55,8 +55,8 @@ jobs:
       - name: Update modfda Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: 16.1.4
-          body: 'Frida 16.1.4'
+          tag_name: 16.1.5
+          body: 'Frida 16.1.5'
           files: |
             android_modfda_arm.7z
             android_modfda_arm64.7z
