@@ -36,7 +36,7 @@ jobs:
           rm -rf ./frida-core
           # git clone --depth=1 https://github.com/axojhf/frida-core.git -b fix
           git clone https://github.com/frida/frida-core
-          git reset --hard 5af3aa2c3d4ffb8888b34cfda8d6a3c16010fa6e
+          git reset --hard 5af3aa2
           make core-android-arm
           make core-android-arm64
           make core-android-x86
