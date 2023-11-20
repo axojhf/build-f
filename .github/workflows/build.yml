@@ -34,7 +34,7 @@ jobs:
           git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b 16.1.7
           cd frida/
           rm -rf ./frida-core
-          git clone --depth=1 https://github.com/axojhf/frida-core.git -b patched
+          git clone --depth=1 https://github.com/axojhf/frida-core.git -b fix
           make core-android-arm
           make core-android-arm64
           make core-android-x86
