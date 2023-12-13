@@ -28,28 +28,15 @@ jobs:
         run: |
           cd C:\frida
           ls
-          msbuild frida.sln /p:Configuration=Release /p:Platform=x64
+          msbuild frida.sln /p:Configuration=Release /p:Platform=x64 -t frida-server
           ls
-      # - name: Package Directories
-      #   run: |
-      #     mv /home/runner/work/frida/build/frida-android-arm/bin/frida-server modfda
-      #     7z a android_modfda_arm.7z modfda
-      #     rm modfda
-      #     mv /home/runner/work/frida/build/frida-android-arm64/bin/frida-server modfda
-      #     7z a android_modfda_arm64.7z modfda
-      #     rm modfda
-      #     mv /home/runner/work/frida/build/frida-android-x86/bin/frida-server modfda
-      #     7z a android_modfda_x86.7z modfda
-      #     rm modfda
-      #     mv /home/runner/work/frida/build/frida-android-x86_64/bin/frida-server modfda
-      #     7z a android_modfda_x86_64.7z modfda
-      # - name: Update modfda Release
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     tag_name: win-build
-      #     body: 'Frida 16.0.19'
-      #     files: |
-      #       android_modfda_arm.7z
-      #       android_modfda_arm64.7z
-      #       android_modfda_x86.7z
-      #       android_modfda_x86_64.7z
+      - name: Package Directories
+        run: |
+          7z a frida-win-x64-custom.7z C:\frida\build\frida-windows\x64-Release\bin
+      - name: Update modfda Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: 16.1.8
+          body: 'Frida 16.1.8'
+          files: |
+            frida-win-x64-custom.7z
