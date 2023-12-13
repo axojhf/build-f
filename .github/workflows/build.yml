@@ -18,7 +18,7 @@ jobs:
         run: |
           cd C:\
           git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b 16.1.8
-          cd frida ; rm -f -Force ./frida-core
+          cd frida ; rm -r -Force ./frida-core
           git clone --depth=1 https://github.com/axojhf/frida-core.git -b patched
       - uses: ilammy/msvc-dev-cmd@v1
         with:
