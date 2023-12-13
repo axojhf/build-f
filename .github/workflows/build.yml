@@ -4,8 +4,7 @@ on:
     branches: [ "win" ]
   pull_request:
     branches: [ "win" ]
-env:
-  ANDROID_NDK_VERSION: r25b
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,7 +17,9 @@ jobs:
       - name: Setup dependencies
         run: |
           cd C:\
-          git clone --depth=1 --recurse-submodules https://github.com/frida/frida
+          git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b 16.1.8
+          cd frida ; rm -f -Force ./frida-core
+          git clone --depth=1 https://github.com/axojhf/frida-core.git -b patched
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
