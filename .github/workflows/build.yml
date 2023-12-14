@@ -28,7 +28,7 @@ jobs:
         run: |
           cd C:\frida
           ls
-          msbuild frida.sln /p:Configuration=Release /p:Platform=x64 -t frida-server
+          msbuild frida.sln /p:Configuration=Release /p:Platform=x64 /p:Projects="frida-server"
           ls
       - name: Package Directories
         run: |
