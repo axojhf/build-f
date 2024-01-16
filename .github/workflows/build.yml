@@ -1,66 +1,40 @@
 name: CI
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "win" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "win" ]
   workflow_dispatch:
-env:
-  ANDROID_NDK_VERSION: r25b
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - name: Set up NDK
-        id: setup-ndk
-        uses: nttld/setup-ndk@v1
-        with:
-          ndk-version: ${{ env.ANDROID_NDK_VERSION }}
-          add-to-path: false
-      - name: Add ANDROID_NDK_ROOT to environment
-        run: echo "ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}" >> $GITHUB_ENV
       - name: Install Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: install dependencies
+      - name: Setup dependencies
         run: |
-          sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install build-essential tree ninja-build gcc-multilib g++-multilib lib32stdc++-9-dev flex bison xz-utils ruby ruby-dev python3-requests python3-setuptools python3-dev python3-pip libc6-dev libc6-dev-i386 p7zip-full p7zip-rar -y
-          sudo gem install fpm --no-document
-          python3 -m pip install lief
-      - name: Init
-        run: |
-          cd /home/runner/work/
+          cd C:\
           git clone --depth=1 --recurse-submodules https://github.com/frida/frida.git -b 16.1.11
-          cd frida/
-          rm -rf ./frida-core
-          git clone --depth=1 https://github.com/axojhf/frida-core.git -b patched
-          # git clone https://github.com/frida/frida-core
-          make core-android-arm
-          make core-android-arm64
-          make core-android-x86
-          make core-android-x86_64
+          cd frida ; rm -r -Force ./frida-core
+          git clone --depth=1 https://github.com/axojhf/frida-core.git -b SharedWin
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+          toolset: 14.3
+      - name: Build
+        run: |
+          cd C:\frida ; ls
+          msbuild frida.sln /p:Configuration=Release /p:Platform=x64 /p:Projects="frida-core" ; ls
       - name: Package Directories
         run: |
-          mv /home/runner/work/frida/build/frida-android-arm/bin/frida-server modfda
-          7z a android_modfda_arm.7z modfda
-          rm modfda
-          mv /home/runner/work/frida/build/frida-android-arm64/bin/frida-server modfda
-          7z a android_modfda_arm64.7z modfda
-          rm modfda
-          mv /home/runner/work/frida/build/frida-android-x86/bin/frida-server modfda
-          7z a android_modfda_x86.7z modfda
-          rm modfda
-          mv /home/runner/work/frida/build/frida-android-x86_64/bin/frida-server modfda
-          7z a android_modfda_x86_64.7z modfda
+          7z a frida-win-x64-custom.7z C:\frida\build\frida-windows\x64-Release\bin
       - name: Update modfda Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: 16.1.11
           body: 'Frida 16.1.11'
           files: |
-            android_modfda_arm.7z
-            android_modfda_arm64.7z
-            android_modfda_x86.7z
-            android_modfda_x86_64.7z
+            frida-win-x64-custom.7z
