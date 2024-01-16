@@ -27,6 +27,9 @@ jobs:
       - name: Build
         run: |
           cd C:\frida ; ls
+          msbuild frida.sln /p:Configuration=Release /p:Platform=x64 /p:Projects="frida-deps"
+          msbuild frida.sln /p:Configuration=Release /p:Platform=x64 /p:Projects="gum-64"
+          msbuild frida.sln /p:Configuration=Release /p:Platform=x64 /p:Projects="gumjs-64"
           msbuild frida.sln /p:Configuration=Release /p:Platform=x64 /p:Projects="frida-core" ; ls
       - name: Package Directories
         run: |
