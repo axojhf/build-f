@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: 'stable'
       - name: Build
@@ -24,7 +24,7 @@ jobs:
       - name: Package Directories
         run: |
           7z a caddy.7z /home/runner/work/forwardproxy/caddy
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: CaddyCustomed
           path: caddy.7z
