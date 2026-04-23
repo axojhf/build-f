@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: 'stable'
       - name: Build
@@ -20,11 +20,11 @@ jobs:
           cd /home/runner/work/
           git clone --depth=1 --recurse-submodules https://github.com/klzgrad/forwardproxy
           cd forwardproxy
-          ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy@caddy2=$PWD
+          ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy@master=$PWD
       - name: Package Directories
         run: |
           7z a caddy.7z /home/runner/work/forwardproxy/caddy
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: CaddyCustomed
           path: caddy.7z
